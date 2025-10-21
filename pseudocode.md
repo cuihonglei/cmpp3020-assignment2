@@ -163,11 +163,11 @@ END SUBPROGRAM
 ```plaintext
 PROGRAM ENROLLMENT_MANAGEMENT_SYSTEM  
 
-    # The program manages student enrollment information**  
-    # Each student has an auto-generated Student ID**  
-    # Student records are stored in both:**  
-    # 1. A LIST (student_records) for displaying all students**  
-    # 2. A DICTIONARY (student_dict) for quick lookup by Student ID**  
+    # The program manages student enrollment information
+    # Each student has an auto-generated Student ID
+    # Student records are stored in both:
+    # 1. A LIST (student_records) for displaying all students
+    # 2. A DICTIONARY (student_dict) for quick lookup by Student ID
 
     DECLARE student_records AS LIST
     DECLARE student_dict AS DICTIONARY
