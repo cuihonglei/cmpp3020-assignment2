@@ -1,17 +1,3 @@
-# PROGRAM SAIT_ENROLLMENT_MANAGEMENT_SYSTEM  
-
-**The program manages student enrollment information**  
-**Each student has an auto-generated Student ID**  
-**Student records are stored in both:**  
-**1. A LIST (student_records) for displaying all students**  
-**2. A DICTIONARY (student_dict) for quick lookup by Student ID**  
-
-```plaintext
-DECLARE student_records AS LIST
-DECLARE student_dict AS DICTIONARY
-DECLARE next_student_id AS INTEGER = 100001 # Used to auto-generate unique Student IDs
-```
-
 # Subprogram: Add Student Record
 ```plaintext
 SUBPROGRAM add_student()
@@ -175,24 +161,33 @@ END SUBPROGRAM
 
 # Main Program Logic
 ```plaintext
-DECLARE choice AS INTEGER
+PROGRAM ENROLLMENT_MANAGEMENT_SYSTEM  
 
-REPEAT
-    CALL display_menu()
-    PRINT "Enter your choice: "
-    INPUT choice
+    # The program manages student enrollment information**  
+    # Each student has an auto-generated Student ID**  
+    # Student records are stored in both:**  
+    # 1. A LIST (student_records) for displaying all students**  
+    # 2. A DICTIONARY (student_dict) for quick lookup by Student ID**  
 
-    SWITCH(choice)
-        CASE 1: CALL add_student()
-        CASE 2: CALL modify_student()
-        CASE 3: CALL remove_student()
-        CASE 5: CALL display_student()
-        CASE 4: CALL display_all_students()
-        CASE 6: PRINT "Exiting system... Goodbye!"
-        DEFAULT: PRINT "Invalid option. Please try again."
-    END SWITCH
+    DECLARE student_records AS LIST
+    DECLARE student_dict AS DICTIONARY
+    DECLARE next_student_id AS INTEGER = 100001 # Used to auto-generate unique Student IDs
 
-UNTIL choice == 6
+    REPEAT
+        CALL display_menu()
+        PRINT "Enter your choice: "
+        INPUT choice
 
+        SWITCH(choice)
+            CASE 1: CALL add_student()
+            CASE 2: CALL modify_student()
+            CASE 3: CALL remove_student()
+            CASE 4: CALL display_student()
+            CASE 5: CALL display_all_students()
+            CASE 6: PRINT "Exiting system... Goodbye!"
+            DEFAULT: PRINT "Invalid option. Please try again."
+        END SWITCH
+
+    UNTIL choice == 6
 END PROGRAM
 ```
