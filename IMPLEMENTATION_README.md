@@ -52,7 +52,7 @@ clang++ -std=c++11 -o enrollment_system enrollment_system.cpp
 ### Key Programming Concepts Demonstrated (C++)
 - **Static Typing**: All variable types are declared at compile time
 - **Data Structures**: 
-  - `vector<Student>` - dynamic array for storing all records
+  - `vector<Student*>` - dynamic array for storing all records
   - `map<int, Student*>` - dictionary for quick ID-based lookup
   - `struct Student` - composite data type
 - **Scoping**: Local variables in functions, global variables for shared state
@@ -128,7 +128,7 @@ python3 enrollment_system.py
 3. Verify error messages are displayed and re-prompts occur
 
 ## Code Attribution
-All code in both implementations was written by **Altesse Imena** as part of CMPP 3020 Assignment 2.
+All code in both implementations was written by **Altesse Imena**, reviewed and fixed by **Honglei Cui** as part of CMPP 3020 Assignment 2.
 The code follows the pseudocode algorithm developed in Part 1 of the assignment.
 
 ## Notes
