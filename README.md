@@ -6,4 +6,6 @@ Cui, Honglei
 Imena, Hidalgo  
 
 File list:  
-Part A - pseudocode.md
+Part 1 - pseudocode.md  
+Part 2 - enrollment_system.cpp  
+Part 3 - enrollment_system.py

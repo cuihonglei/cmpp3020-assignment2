@@ -53,6 +53,10 @@ void clear_input_buffer();
  * Author: Altesse Imena
  */
 int main() {
+
+    // <-- PREVENTS REALLOCATION up to 100 students to maintain pointer validity
+    student_records.reserve(100); 
+
     int choice;  // Local variable with block scope
     bool running = true;  // Control variable for main loop
     
