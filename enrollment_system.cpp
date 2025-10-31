@@ -5,7 +5,7 @@
  * This program implements a student enrollment management system that allows
  * administrative staff to add, modify, remove, and display student records.
  * 
- * Author: Altesse Imena
+ * Author: Altesse Imena, Honglei Cui
  * Date: October 23, 2025
  */
 
@@ -34,7 +34,7 @@ struct Student {
 
 // Global variables for student data management
 // Demonstrates static data binding (types known at compile time)
-vector<Student> student_records;           // Dynamic array (list) to store all student records
+vector<Student*> student_records;          // Dynamic array (list) to store all student records
 map<int, Student*> student_dict;           // Dictionary (map) for quick lookup by ID using references
 int next_student_id = 100001;              // Auto-incrementing student ID counter
 
@@ -46,6 +46,7 @@ void remove_student();
 void display_student();
 void display_all_students();
 void clear_input_buffer();
+void cleanup_students();
 
 /*
  * Main program entry point
@@ -53,9 +54,6 @@ void clear_input_buffer();
  * Author: Altesse Imena
  */
 int main() {
-
-    // <-- PREVENTS REALLOCATION up to 100 students to maintain pointer validity
-    student_records.reserve(100); 
 
     int choice;  // Local variable with block scope
     bool running = true;  // Control variable for main loop
@@ -102,6 +100,9 @@ int main() {
         cout << endl;  // Add spacing between operations
     }
     
+    // Prevents memory leaks
+    cleanup_students();  
+
     return 0;
 }
 
@@ -126,28 +127,28 @@ void display_menu() {
  * Author: Altesse Imena
  */
 void add_student() {
-    Student student;  // Local variable - demonstrates block scoping
+    Student *student = new Student();  // Local variable - demonstrates block scoping
     
     // Assign unique student ID (auto-increment)
-    student.id = next_student_id;
+    student->id = next_student_id;
     next_student_id++;  // Increment for next student
     
     // Collect student information with input prompts
     cout << "Enter First Name: ";
-    getline(cin, student.first_name);
+    getline(cin, student->first_name);
     
     cout << "Enter Last Name: ";
-    getline(cin, student.last_name);
+    getline(cin, student->last_name);
     
     cout << "Enter Date of Birth (YYYY-MM-DD): ";
-    getline(cin, student.date_of_birth);
+    getline(cin, student->date_of_birth);
     
     cout << "Enter Gender: ";
-    getline(cin, student.gender);
+    getline(cin, student->gender);
     
     // Input validation for GPA (must be numeric)
     cout << "Enter GPA from Previous Institution: ";
-    while (!(cin >> student.gpa) || student.gpa < 0.0 || student.gpa > 4.0) {
+    while (!(cin >> student->gpa) || student->gpa < 0.0 || student->gpa > 4.0) {
         cout << "Invalid GPA. Please enter a value between 0.0 and 4.0: ";
         clear_input_buffer();
     }
@@ -155,18 +156,18 @@ void add_student() {
     
     // Input validation for semester (must be positive integer)
     cout << "Enter Current Semester: ";
-    while (!(cin >> student.semester) || student.semester < 1) {
+    while (!(cin >> student->semester) || student->semester < 1) {
         cout << "Invalid semester. Please enter a positive number: ";
         clear_input_buffer();
     }
     clear_input_buffer();
     
     cout << "Enter Program: ";
-    getline(cin, student.program);
+    getline(cin, student->program);
     
     // Input validation for number of courses
     cout << "Enter Number of Courses: ";
-    while (!(cin >> student.num_courses) || student.num_courses < 0) {
+    while (!(cin >> student->num_courses) || student->num_courses < 0) {
         cout << "Invalid number. Please enter a non-negative number: ";
         clear_input_buffer();
     }
@@ -177,9 +178,9 @@ void add_student() {
     
     // Store reference to student in map (dictionary) for quick lookup
     // Demonstrates use of referencing - storing pointer to the last element
-    student_dict[student.id] = &student_records.back();
+    student_dict[student->id] = student;
     
-    cout << "Student record added successfully. Assigned Student ID: " << student.id << endl;
+    cout << "Student record added successfully. Assigned Student ID: " << student->id << endl;
 }
 
 /*
@@ -304,7 +305,8 @@ void remove_student() {
         // Remove from vector using iterator
         // Demonstrates use of loops and conditional logic
         for (auto it = student_records.begin(); it != student_records.end(); ++it) {
-            if (it->id == search_id) {
+            if ((*it)->id == search_id) {
+                delete *it;  // Free allocated memory
                 student_records.erase(it);
                 break;
             }
@@ -312,14 +314,7 @@ void remove_student() {
         
         // Remove from dictionary
         student_dict.erase(search_id);
-        
-        // Update all pointers in the dictionary after vector modification
-        // This is necessary because vector elements may have been moved in memory
-        student_dict.clear();
-        for (size_t i = 0; i < student_records.size(); ++i) {
-            student_dict[student_records[i].id] = &student_records[i];
-        }
-        
+
         cout << "Student record with ID " << search_id << " removed successfully." << endl;
     } else {
         cout << "No student found with that Student ID." << endl;
@@ -379,16 +374,16 @@ void display_all_students() {
     
     // Iterate through all students using range-based for loop
     // Demonstrates use of loops and pass by reference (const reference for efficiency)
-    for (const Student& student : student_records) {
-        cout << "Student ID: " << student.id << endl;
-        cout << "Name: " << student.first_name << " " << student.last_name << endl;
-        cout << "DOB: " << student.date_of_birth << endl;
-        cout << "Gender: " << student.gender << endl;
+    for (const Student *student : student_records) {
+        cout << "Student ID: " << student->id << endl;
+        cout << "Name: " << student->first_name << " " << student->last_name << endl;
+        cout << "DOB: " << student->date_of_birth << endl;
+        cout << "Gender: " << student->gender << endl;
         cout << fixed << setprecision(2);
-        cout << "GPA: " << student.gpa << endl;
-        cout << "Semester: " << student.semester << endl;
-        cout << "Program: " << student.program << endl;
-        cout << "Courses: " << student.num_courses << endl;
+        cout << "GPA: " << student->gpa << endl;
+        cout << "Semester: " << student->semester << endl;
+        cout << "Program: " << student->program << endl;
+        cout << "Courses: " << student->num_courses << endl;
         cout << "----------------------------" << endl;
     }
 }
@@ -401,4 +396,20 @@ void display_all_students() {
 void clear_input_buffer() {
     cin.clear();  // Clear error flags
     cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Discard remaining input
+}
+
+/*
+ * Utility function to clean up all dynamically allocated student records
+ * Prevents memory leaks by deleting all heap-allocated Student objects
+ * Resets the student database to its initial empty state
+ * Author: Honglei Cui
+ */
+void cleanup_students() {
+    // Delete all heap objects
+    for (Student* s : student_records) {
+        delete s;
+    }
+    student_records.clear();
+    student_dict.clear();
+    next_student_id = 100001;
 }
